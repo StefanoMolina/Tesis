@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "gibbs_bigaussian <- function(M=10000, rho=0.98){\n  #\tRepositorio\n  repositorio <- matrix(NA, ncol=2, nrow=M)\n  #\tValores iniciales\n  x <- 0\n  y <- 0\n  repositorio[1, ] <- c(x, y)\n  #\tIteraciones\n  m <- 2\n  for(m in 2:M){\n    x <- rnorm(1, rho * y, sqrt(1 - rho^2))\n    y <- rnorm(1, rho * x, sqrt(1 - rho^2))\n    repositorio[m, ] <- c(x, y)\n  }\n  #\tResultado\n  names(repositorio) <- c(\"x1\",\"x2\")\n  return(repositorio)\n}\n",
+    "created" : 1481691775448.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1516376771",
+    "id" : "5F6FCAE8",
+    "lastKnownWriteTime" : 1481691791,
+    "last_content_update" : 1481691791373,
+    "path" : "C:/JCMO.Trabajo/@Estudiantes/Stefano Molina/Tesis/code/gibbs_sampler/gibbs_bigaussian.R",
+    "project_path" : "gibbs_bigaussian.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
