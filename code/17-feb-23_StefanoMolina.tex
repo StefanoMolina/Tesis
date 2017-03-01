@@ -1,0 +1,116 @@
+\documentclass[letterpaper]{paper}
+
+%\usepackage{algorithm2e}
+%\usepackage[linesnumbered]{algorithm2e}
+%\usepackage[linesnumbered,ruled]{algorithm2e}
+\usepackage[linesnumbered,ruled,vlined]{algorithm2e}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage[spanish]{babel}
+\usepackage{epsfig}
+\usepackage{graphicx}
+
+\newcommand{\bolde}{\boldsymbol{e}}
+\newcommand{\boldA}{\boldsymbol{A}}
+\newcommand{\boldy}{\boldsymbol{y}}
+\newcommand{\boldY}{\boldsymbol{Y}}
+\newcommand{\boldf}{\boldsymbol{f}}
+\newcommand{\boldF}{\boldsymbol{F}}
+\newcommand{\boldb}{\boldsymbol{b}}
+\newcommand{\boldB}{\boldsymbol{B}}
+\newcommand{\boldbeta}{\boldsymbol{\beta}}
+\newcommand{\boldBeta}{\boldsymbol{\Beta}}
+\newcommand{\boldsigma}{\boldsymbol{\sigma}}
+\newcommand{\boldSigma}{\boldsymbol{\Sigma}}
+\newcommand{\boldzero}{\boldsymbol{0}}
+\newcommand{\boldI}{\boldsymbol{I}}
+
+\newcommand{\NormD}{\text{N}}
+\newcommand{\Real}{\mathbb{R}}
+\newcommand{\diag}{\text{diag}}
+\newcommand{\etr}{\text{etr}}
+\newcommand{\tr}{\text{tr}}
+
+\title{Bayesian Factor Model}
+\author{J. C. Mart\'inez-Ovando}
+
+\begin{document}
+	
+\maketitle
+
+\section{Estructura y especificaci\'on}
+
+Suponemos que los datos $\{\boldy_1,\ldots,\boldy_T\}$ toman valores en $\Real^{p}$ (con $p<\infty$). 
+
+Para cualquier numero $k\leq p$ se tiene que el modelo de factores queda especificado como
+\begin{eqnarray}
+	\boldy_t|\boldf_t 
+	  & \sim &
+	  \NormD\left(\boldy_t|\boldB\boldf_t,\boldSigma\right)
+	  \nonumber \\
+	\boldf_t
+	  & \sim &
+	  \NormD\left(\boldf_t|\boldzero,\boldI\right),
+	  \nonumber 
+\end{eqnarray}
+para $t=1,\ldots,T$, donde 
+\begin{itemize}
+  \item[$\boldf_t$] es el vector de factores $k$-dimensional asociado con $\boldy_t$  
+  \item[$\boldB$] es una matriz de dimensi\'on $(p\times k)$ con los vectores de cargas asociados con los factores $\boldf_t$ para $\boldy_t$
+  \item[$\boldSigma$] es una matriz $\diag\{\sigma_1^{2},\ldots,\sigma_p^{2}\}$ positivo definida de dimensi\'on $(p\times p)$
+  \item[$\boldI$] es la matriz identidad de dimensi\'on $(k\times k)$.
+\end{itemize}
+De la especificaci\'on anterior se sigue que la varianza no condicional de las observaciones es,
+\begin{eqnarray}
+ var(\boldy_t|\boldB,\boldSigma)
+   & = &
+   \boldB\boldB' + \boldSigma.
+   \nonumber
+\end{eqnarray}
+
+El modelo implica que, condicional a los factores comunes, las variables observables no están correlacionadas: por lo tanto, los factores comunes explican toda la estructura de dependencia entre las $p$ variables. lo anterior motiva para considerar:
+\begin{itemize}
+	\item la sucesi\'on de factores $\{\boldf_t\}_{t=1}^{T}$ como un conjunto de variables latentes, y
+	\item al conjunto $\{\boldB,\boldSigma\}$ como los par\'ametros del modelo.
+\end{itemize}
+
+La verosimilitud extendida del modelo (i.e. verosimilitud para par\'ametros y variables latentes), se define como
+\begin{eqnarray}
+lik\left(\boldB,\boldSigma,\{\boldf_t\}_{t=1}^{T}|\{\boldy_t\}_{t=1}^{T}\right)
+	& = &
+	p\left(\{\boldy_t\}_{t=1}^{T}|\boldB,\boldSigma,\{\boldf_t\}_{t=1}^{T}\right)
+	\nonumber \\
+	& \propto &
+	\det(\boldSigma)^{-T/2}
+	\etr\left\{-(1/2)\boldSigma^{-1}\bolde\bolde'\right\},
+	\nonumber
+\end{eqnarray}
+donde $\etr\{\boldA\}=\exp\{\tr(A)\}$ para toda matriz $\boldA$.
+
+\subsection{Distribuci\'on inicial}
+
+\subsection{Distribuci\'on final}
+	
+\begin{algorithm}[H]
+	\SetAlgoLined 
+	Inicializaci\'on: $\boldB^{(0)}$, $\boldSigma^{(0)}$, Y $\{\boldf^{(0)}_t\}_{t=1}^{T}$\\
+	\For{$k$ en $1:M$}{
+		simular $\boldB^{(k)}$ de 
+		$$
+		p\left(\boldB|\boldSigma^{(k-1)},\{\boldf^{(k-1)}_t\}_{t=1}^{T},\{\boldy_t\}_{t=1}^{T}\right)
+		$$\\
+		simular $\boldSigma^{(k)}$ de
+		$$
+		p\left(\boldSigma|\boldB^{(k)},\{\boldf^{(k-1)}_t\}_{t=1}^{T},\{\boldy_t\}_{t=1}^{T}\right)
+		$$\\
+		simular $\{\boldf^{(k)}_t\}_{t=1}^{T}$ de
+		$$
+		p\left(\{\boldf_t\}_{t=1}^{T}|\boldB^{(k)},\boldSigma^{(k)},\{\boldy_t\}_{t=1}^{T}\right)
+		$$
+	}
+	\Return{$\left\{\boldB^{(k)},\boldSigma^{(k)},\{\boldf^{(k)}_t\}_{t=1}^{T}\right\}_{k=1}^{M}$}
+	\caption{Gibbs sampler para el modelo de factores}
+\end{algorithm}
+
+\end{document}
