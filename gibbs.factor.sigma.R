@@ -16,5 +16,5 @@ gibbs.factor.sigma <-function(F, B ,y, v, s, k){
   
   sig<-sig*sigm
   
-  
+  return(sig)
 }
