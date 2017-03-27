@@ -16,10 +16,14 @@ gibbs.factor <-function(y, k, v, s, c0, mu0, M ){
   AF$correlation<-Sigma_aux
   AF$factors<-F_aux
   
+  %Se crean los arreglos de tres dimensiones para almacenar las matrices generadas por el algoritmo de Gibbs
+  
   f_rep<-array(data=NA,dim=c(M,nrow(F_aux),ncol(F_aux)))
   sigma_rep<-array(data=NA,dim=c(M,nrow(Sigma_aux),ncol(Sigma_aux)))
   B_rep<-array(data=NA,dim=c(M,nrow(B_aux),ncol(B_aux)))
   
+  
+  %Muestro de Gibbs
   for(j in 1:M){
     F_aux<-gibbs.factor.F(S, B ,y)
     
@@ -33,6 +37,8 @@ gibbs.factor <-function(y, k, v, s, c0, mu0, M ){
     
   }
    
+  %Despliegue de resultados
+  
   result <- list(F=f_rep, Sigma=Sigma_rep, B=B_rep )    
   return(result)
   
