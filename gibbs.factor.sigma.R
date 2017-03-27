@@ -1,4 +1,4 @@
-gibbs.factor.sigma <-function(f, F ,y, v, s, k){
+gibbs.factor.sigma <-function(F, B ,y, v, s, k){
   
   library(invgamma)
   
@@ -9,7 +9,7 @@ gibbs.factor.sigma <-function(f, F ,y, v, s, k){
   
   for(i in 0:n)
   {
-    d=t(y[,i]-f*F)(y[,i]-f*F)
+    d=t(y[,i]-F*B)(y[,i]-F*B)
     sigm[i]<-rinvgamma(1, shape=(v+n)/2, rate=(v*s^2+d)/2)
     
   }
