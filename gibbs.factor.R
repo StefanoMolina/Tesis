@@ -25,9 +25,9 @@ gibbs.factor <-function(y, k, v, s, c0, mu0, M ){
   
   %Muestro de Gibbs
   for(j in 1:M){
-    F_aux<-gibbs.factor.F(S, B ,y)
+    F_aux<-gibbs.factor.F(S, B ,y, k)
     
-    B_aux<-gibbs.factor.B()
+    B_aux<-gibbs.factor.B(S, F ,y, m0, c0, k)
     
     Sigma_aux<-gibbs.factor.sigma(F, B ,y, v, s, k)
     
