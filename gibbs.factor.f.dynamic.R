@@ -10,8 +10,9 @@ gibbs.factor.f.dynamic <-function(S, B ,y, k){
   {
     
     Sinv<-solve(S)
-    f[,j]<-rmvnorm(1, mean=(solve(diag(1,k) + t(B) %*% Sinv %*% B) %*% t(B) %*% Sinv %*% 
-                        (y[,j]-t(B)%*%f[,j-1])+f[,j-1],sigma=solve(diag(1,k)+t(B) %*% Sinv %*% B)
+    f[,j]<-rmvnorm(1, 
+                   mean=(solve(diag(1,k) + t(B) %*% Sinv %*% B) %*% (t(B)%*% Sinv %*%y[,j]+f[,j-1]),
+                   sigma=solve(diag(1,k)+t(B) %*% Sinv %*% B)
   }     
   
   
