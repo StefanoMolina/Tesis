@@ -2,16 +2,20 @@ gibbs.factor.f <-function(S, B ,y, k){
   
   library(mvtnorm)
   
-  %La funci??n genera el vector de factores condicionado a las matrices Sigma, Y y F.
   
-  f<-matrix(0,k,ncol(y))
-  
-  for (j in 1:ncol(y))
+  f<-matrix(0,nrow(y),k)
+  B<-as.matrix(B)
+  y<-as.matrix(y)
+  S<-as.matrix(S)
+
+  for (j in 1:nrow(y))
   {
   
-    Sinv<-solve(S)
-  f[,j]<-rmvnorm(1, mean=(solve(diag(1,k) + t(B) %*% Sinv %*% B) %*% t(B) %*% Sinv %*% y[,j]),
-          sigma=solve(diag(1,k)+t(B) %*% Sinv %*% B)
+    
+    m<-solve(diag(1,k) + t(B) %*% S %*% B)
+  f[j,]<-rmvnorm(1, mean=m %*% t(B) %*% S %*% y[j,],
+          sigma=m)
+          
   }     
           
           

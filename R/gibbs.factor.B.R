@@ -1,38 +1,52 @@
-gibbs.factor.B <-function(S, F ,y, m0, c0, k){
+gibbs.factor.B <-function(S, FF ,y, c0, k, B_0){
   
   library(mvtnorm)
-  obs<-nrow(y)
+  obs<-ncol(y)
+  
   
   B<-matrix(0,obs,k)
-  m<-m0
+  
   c<-c0
+  m<-B_0[1,]
+  m0<-colMeans(B_0)
   cinv<-solve(c0)
   
-  for(j in 1:k){
+  for(j in 1:obs){
+    
+    if(j<=k){
+     
+    Sinv<-drop(S[j,j])
+    c<-cinv[1:j,1:j] + Sinv * (t(as.matrix(FF[,1:j])) %*% as.matrix(FF[,1:j]))
+    cc<-cinv %*% m0
+    m<-c %*% (cc[1:j] + Sinv * t(as.matrix(FF[,1:j])) %*% as.matrix(y[,j]))
     
     b<-rmvnorm(1, mean = m, sigma = solve(c) )
-              
+         
     if (b[j]<0) 
     {
        b<-b*0
     }
+
     
-    
-      
-    m<-c %*% (cinv %*% m0 + 1/(S[j,j]) %*% t(F[j,]) %*% y[j,])
-    c<-cinv %*% matrix(1,j,j) + 1/S[j,j] %*% t(F[j,]) %*% F[j,]
-    
-    B[j,]<-t(b)
+    B[j,]<-b
   }
   
-  for(j in k+1:obs){
+  else if(j>k){
+    
+    Sinv<-drop(S[j,j])
+    c<-cinv[1:k,1:k] + Sinv * t(FF) %*% FF
+    m<-c %*% (cinv %*% m0 + Sinv * t(as.matrix(FF)) %*% as.matrix(y[,j]))
+    
     
     b<-rmvnorm(1, mean = m, sigma = solve(c) )
     
     
-    m<-c %*% (cinv %*% m0 + 1/(S[i,i]) %*% t(F) %*% y[i,])
-    c<-cinv %*% matrix(1,i,i) + 1/S[i,i] %*% t(F) %*% F
+
     
     B[j,]<-t(b)
   }
+  }
+  
+  return(B)
+}
   

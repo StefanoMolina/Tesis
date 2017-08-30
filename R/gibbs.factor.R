@@ -1,4 +1,5 @@
-gibbs.factor <-function(y, k, v, s, c0, mu0, M ){
+gibbsfactor <- function(y, k, v, s, c0, mu0, M )
+  {
   %y   -> matriz de datos
   %k   -> numero de factores
   %v   -> hiperparametro para Ginv en gibbs.factor.sigma
@@ -10,11 +11,11 @@ gibbs.factor <-function(y, k, v, s, c0, mu0, M ){
   
   %El algoritmo inicia obteniendo los valores iniciales para F, B y Sigma
   
-  AF<-factanal(y, 1, data = NULL, covmat = diag(1,ncol(y)), n.obs = ncol(y))
+  AF<-factanal(y, factors = k, data = NULL, covmat = diag(1,ncol(y)), n.obs = ncol(y))
   
-  AF$loadings<-B_aux
-  AF$correlation<-Sigma_aux
-  AF$factors<-F_aux
+  B_aux<-AF$loadings
+  Sigma_aux<-AF$correlation
+  F_aux<-AF$factors
   
   %Se crean los arreglos de tres dimensiones para almacenar las matrices generadas por el algoritmo de Gibbs
   
@@ -25,15 +26,17 @@ gibbs.factor <-function(y, k, v, s, c0, mu0, M ){
   
   %Muestro de Gibbs
   for(j in 1:M){
-    F_aux<-gibbs.factor.F(S, B ,y, k)
+    F_aux<-gibbs.factor.F(Sigma_aux, B_aux ,y, k)
     
-    B_aux<-gibbs.factor.B(S, F ,y, m0, c0, k)
+    B_aux<-gibbs.factor.B(Sigma_aux, F_aux ,y, mu0, c0, k)
     
-    Sigma_aux<-gibbs.factor.sigma(F, B ,y, v, s, k)
+    Sigma_aux<-gibbs.factor.sigma(F_aux, B_aux ,y, v, s, k)
     
     f_rep[j, ,]<-F_aux
     Sigma_rep[j, , ]<-Sigma_aux
     B_rep[j, , ]<-B_aux
+    
+    
     
   }
    

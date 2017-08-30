@@ -1,20 +1,25 @@
-gibbs.factor.sigma <-function(F, B ,y, v, s, k){
+gibbs.factor.sigma <-function(FF, B ,y, v, s, k){
   
   library(invgamma)
+  library(OpenMx)
   
-  n<-nrow(y)
+  n<-ncol(y)
+  
   
   sigm<-matrix(0,n,1)
-  sig<-diag(1,n)
   
-  for(i in 0:n)
+  
+  for(i in 1:n)
   {
-    d=t(y[,i]-F*B)(y[,i]-F*B)
-    sigm[i]<-rinvgamma(1, shape=(v+n)/2, rate=(v*s^2+d)/2)
+    
+    d=t(y[,i]-FF %*% B[i,]) %*% as.matrix(y[,i]-FF %*% B[i,])
+    
+    sigm[i]<-rinvgamma(1, shape=(v+n)/2, rate =(v*s[i]^2+d)/2)
     
   }
   
-  sig<-sig*sigm
+  sig<-vec2diag(sigm)
+  Sinv<-solve(sig)
   
-  return(sig)
+  return(Sinv)
 }
