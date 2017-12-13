@@ -17,7 +17,7 @@ gibbs.factor.B.prior <-function(y, c0, k){
           B[i,j]<-0
         }
       }
-      else if(j>i){
+      else if(i>j){
         B[i,j]<-0
       }
       else{
